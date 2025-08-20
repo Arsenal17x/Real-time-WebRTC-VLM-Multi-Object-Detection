@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+    --bg-color: #0D0B14;
+    --primary-glow: #2dd4bf;
+    --secondary-glow: #a78bfa;
+    --surface-color: rgba(20, 18, 28, 0.65);
+    --surface-border: rgba(139, 123, 176, 0.2);
+    --surface-shadow: rgba(0, 0, 0, 0.5);
+    --text-primary: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --accent-color: #2dd4bf;
+    --accent-hover: #5eead4;
+    --font-primary: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    margin: 0;
+    background-color: var(--bg-color);
+    background-image: radial-gradient(at 20% 20%, var(--primary-glow) 0px, transparent 50%),
+                      radial-gradient(at 80% 80%, var(--secondary-glow) 0px, transparent 50%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 90vh;
+    justify-content: center;
+}
+
+header {
+    width: 100%;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--primary-glow);
+    letter-spacing: 1px;
+}
+
+.header-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-glow), transparent);
+    border: none;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
+
+.panel {
+    width: 100%;
+    background: var(--surface-color);
+    border: 1px solid var(--surface-border);
+    border-radius: 20px;
+    padding: 32px 24px 24px 24px;
+    box-shadow: 0 8px 32px var(--surface-shadow);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.controls label {
+    font-size: 1.1rem;
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+    margin-right: 8px;
+}
+
+button {
+    background: transparent;
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background .2s, color .2s, box-shadow .2s, transform .1s;
+    font-weight: 600;
+    font-family: var(--font-mono);
+}
+
+button:hover {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    box-shadow: 0 0 20px var(--accent-color);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    box-shadow: none;
+    background: transparent;
+    color: var(--accent-color);
+}
+
+.room-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+code {
+    background: rgba(0,0,0,0.2);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--surface-border);
+    color: #c7d2fe;
+    font-family: var(--font-mono);
+}
+
+.video-wrap {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--surface-border);
+    box-shadow: 0 0 30px var(--surface-shadow);
+    margin-bottom: 16px;
+    min-height: 200px;
+}
+
+video {
+    display: block;
+    width: 100%;
+    background: #000;
+}
+
+.metrics {
+    color: var(--text-primary);
+    font: 15px/1.6 var(--font-mono);
+    margin-top: 8px;
+}
+
+.qr-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.hint {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+    .container {
+        max-width: 98vw;
+        padding: 16px 4px;
+    }
+    .panel {
+        padding: 18px 6px 16px 6px;
+    }
+    header h1 {
+        font-size: 1.3rem;
+    }
+}
