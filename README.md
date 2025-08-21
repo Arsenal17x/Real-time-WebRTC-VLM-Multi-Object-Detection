@@ -7,7 +7,7 @@ A cross-device, real-time object detection demo using WebRTC for video streaming
 The entire inference pipeline runs on-device, requiring no cloud or dedicated GPU server.
 
 <!-- Optional: Add a GIF or screenshot of the demo in action -->
-<!-- ![Demo GIF](docs/demo.gif) -->
+<!-x- ![Demo GIF](docs/demo.gif) -->
 
 ---
 
