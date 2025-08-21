@@ -133,15 +133,33 @@ server.listen(PORT, async () => {
     try {
         const shouldTunnel = String(process.env.TUNNEL || '').toLowerCase();
         if (shouldTunnel === '1' || shouldTunnel === 'true' || shouldTunnel === 'yes') {
-            // Lazy import to avoid dependency if not used
-            localtunnel = require('localtunnel');
-            const tunnel = await localtunnel({ port: Number(PORT) });
-            externalBaseUrl = tunnel.url.replace(/\/$/, '');
-            console.log(`HTTPS tunnel active: ${externalBaseUrl}`);
-            tunnel.on('close', () => { externalBaseUrl = null; });
+            // Avoid starting localtunnel in managed/cloud hosts (Render, Heroku, GAE, etc.)
+            const cloudDetected = !!(
+                process.env.RENDER ||
+                process.env.K_SERVICE ||    // Cloud Run
+                process.env.GAE_INSTANCE || // App Engine
+                process.env.HEROKU ||       // (if you set)
+                process.env.DYNO           // Heroku dyno
+            );
+            if (cloudDetected) {
+                console.log('Skipping localtunnel: running in a cloud environment');
+            } else {
+                // Lazy require only when we actually want a tunnel
+                localtunnel = require('localtunnel');
+                const tunnel = await localtunnel({ port: Number(PORT) });
+                externalBaseUrl = tunnel.url.replace(/\/$/, '');
+                console.log(`HTTPS tunnel active: ${externalBaseUrl}`);
+                // Ensure we clean up on close and do not crash the process on tunnel-level errors
+                tunnel.on('close', () => { externalBaseUrl = null; });
+                tunnel.on('error', (err) => {
+                    console.error('Localtunnel error (non-fatal):', err && err.message ? err.message : err);
+                    externalBaseUrl = null;
+                    // Don't rethrow — just log and continue
+                });
+            }
         }
     } catch (err) {
-        console.error('Tunnel error:', err.message);
+        console.error('Tunnel error (caught):', err && err.message ? err.message : err);
     }
 });
 
