@@ -19,7 +19,6 @@
 html, body {
     height: 100%;
     margin: 0;
-    overflow: hidden; /* hide page scrollbars - content is scaled to fit */
 }
 
 * {
@@ -113,7 +112,6 @@ header h1 {
     width: 100%;
     flex: 1 1 auto;     /* grow to fill panel */
     min-height: 0;      /* important so children can shrink inside flex */
-    overflow: hidden;   /* ensure no internal scrollbars */
 }
 
 /* Video column - gets the majority of horizontal space; allow it to shrink */
@@ -159,8 +157,11 @@ video {
 .metrics {
     color: var(--text-primary);
     font: clamp(12px, 1.4vh, 15px)/1.4 var(--font-mono);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
     margin: 0;
     overflow-wrap: anywhere;
+    gap: 20px;
 }
 
 /* QR card: keep it responsive and bound by the column height */
@@ -169,7 +170,7 @@ video {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin-top: 0;
+    margin-top: 18px;
     width: 100%;
 }
 
