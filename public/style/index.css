@@ -15,44 +15,51 @@
     --font-mono: 'JetBrains Mono', monospace;
 }
 
+/* Make sure the root fills the viewport so we can size child containers */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* hide page scrollbars - content is scaled to fit */
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     font-family: var(--font-primary);
-    margin: 0;
     background-color: var(--bg-color);
     background-image: radial-gradient(at 20% 20%, var(--primary-glow) 0px, transparent 50%),
                       radial-gradient(at 80% 80%, var(--secondary-glow) 0px, transparent 50%);
     color: var(--text-primary);
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+/* Container constrained to viewport and uses the available height */
 .container {
     width: 100%;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 30px 10%;
+    padding: clamp(10px, 2.5vh, 30px) 6%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 90vh;
 }
 
+/* Header area keeps compact using clamp */
 header {
     width: 100%;
-    margin: 10px 0 30px;
+    margin: 20px 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 6px;
 }
 
 header h1 {
-    font-size: 2.2rem;
+    font-size: clamp(1.0rem, 2.2vw, 1.6rem);
     margin: 0;
     font-family: var(--font-mono);
     font-weight: 700;
@@ -70,34 +77,123 @@ header h1 {
     opacity: 0.5;
 }
 
+/* Panel becomes the main vertical flex shell; it will fill the remaining container space */
 .panel {
     width: 100%;
     background: var(--surface-color);
     border: 1px solid var(--surface-border);
     border-radius: 20px;
-    padding: 32px 24px 24px 24px;
+    padding: 24px 16px;
     box-shadow: 0 8px 32px var(--surface-shadow);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: clamp(8px, 1.2vh, 24px);
+    height: 100%; /* take full container height */
+    min-height: 300px; /* allow children to shrink */
 }
 
+/* Controls stay at the top with compact spacing */
 .controls {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 18px;
     flex-wrap: wrap;
+    font-size: clamp(12px, 1.2vh, 15px);
 }
 
+/* The content area grows to consume the rest of the panel and becomes a two-column flex */
+.content {
+    display: flex;
+    gap: clamp(8px, 1.2vh, 24px);
+    align-items: stretch;
+    width: 100%;
+    flex: 1 1 auto;     /* grow to fill panel */
+    min-height: 0;      /* important so children can shrink inside flex */
+    overflow: hidden;   /* ensure no internal scrollbars */
+}
+
+/* Video column - gets the majority of horizontal space; allow it to shrink */
+.video-wrap {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--surface-border);
+    box-shadow: 0 0 30px var(--surface-shadow);
+    margin: 0;           /* controlled by .content gap */
+    min-width: 0;        /* allows proper shrinking inside flex */
+    min-height: 0;       /* for flex children so it can shrink vertically */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+/* Make video fit available space without overflowing */
+video {
+    display: block;
+    max-width: 480px;
+    max-height: 100%;
+    height: auto;
+    object-fit: contain;
+    background: #000;
+}
+
+/* Side column for metrics and QR: narrower but flexible */
+.side {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6px, 1vh, 12px);
+    /* Keep side column narrower but allow growth when space available */
+    flex: 1 1 260px;
+    min-width: 180px;
+    max-width: 420px;
+    align-self: stretch;
+    padding: 8px;
+}
+
+/* Ensure metrics text wraps and scales down if needed */
+.metrics {
+    color: var(--text-primary);
+    font: clamp(12px, 1.4vh, 15px)/1.4 var(--font-mono);
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+/* QR card: keep it responsive and bound by the column height */
+.qr-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 0;
+    width: 100%;
+}
+
+/* Make QR image responsive when present */
+.qr-card img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    max-height: 30vh; /* won't exceed a portion of viewport */
+}
+
+/* Keep small helper text compact */
+.hint {
+    color: var(--text-secondary);
+    font-size: clamp(11px, 1.2vh, 14px);
+    margin-top: 0;
+    text-align: center;
+}
+
+/* Controls, code and button styling preserved (minor clamps) */
 .controls label {
-    font-size: 1.1rem;
+    font-size: clamp(12px, 1.2vh, 15px);
     font-family: var(--font-mono);
     color: var(--accent-color);
-    margin-right: 8px;
 }
 
 button {
@@ -105,11 +201,12 @@ button {
     color: var(--accent-color);
     border: 2px solid var(--accent-color);
     border-radius: 10px;
-    padding: 10px 20px;
+    padding: clamp(6px, 0.9vh, 10px) clamp(10px, 2vw, 20px);
     cursor: pointer;
     transition: background .2s, color .2s, box-shadow .2s, transform .1s;
     font-weight: 600;
     font-family: var(--font-mono);
+    font-size: clamp(12px, 1.2vh, 14px);
 }
 
 button:hover {
@@ -134,7 +231,7 @@ button:disabled {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 0;
 }
 
 code {
@@ -144,54 +241,47 @@ code {
     border: 1px solid var(--surface-border);
     color: #c7d2fe;
     font-family: var(--font-mono);
+    font-size: clamp(12px, 1.2vh, 14px);
 }
 
-.video-wrap {
-    position: relative;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid var(--surface-border);
-    box-shadow: 0 0 30px var(--surface-shadow);
-    margin-bottom: 16px;
-    min-height: 200px;
-}
-
-video {
-    display: block;
-    width: 100%;
-    background: #000;
-}
-
-.metrics {
-    color: var(--text-primary);
-    font: 15px/1.6 var(--font-mono);
-    margin-top: 8px;
-}
-
-.qr-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 12px;
-}
-
-.hint {
-    color: var(--text-secondary);
-    font-size: 15px;
-    margin-top: 8px;
-}
-
+/* Small screens: stack but still fit viewport; scale elements down as needed */
 @media (max-width: 900px) {
     .container {
-        max-width: 98vw;
-        padding: 16px 10px;
+        padding: clamp(8px, 2vh, 16px);
     }
     .panel {
-        padding: 18px;
+        padding: clamp(8px, 1.2vh, 18px);
+        gap: 10px;
     }
     header h1 {
-        font-size: 1.3rem;
-        margin-top: 12px;
+        font-size: clamp(0.9rem, 3.2vw, 1.2rem);
+    }
+
+    /* Stack vertically but keep everything fitting using flex shrink */
+    .content {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .video-wrap {
+        flex: none;
+        width: 100%;
+        /* limit video height to avoid overflow */
+        max-height: 60vh;
+    }
+    video {
+        max-height: 100%;
+        width: 100%;
+    }
+    .side {
+        flex: none;
+        width: 100%;
+        max-height: 35vh;
+        justify-content: flex-start;
+    }
+    .qr-card img {
+        max-height: 22vh;
     }
 }
+
+/* Extra safety: ensure no scrollbars from tiny rounding errors */
+*::-webkit-scrollbar { display: none; }
